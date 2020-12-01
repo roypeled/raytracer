@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist/",
+    "noImplicitAny": true,
+    "target": "es5",
+    "module": "es2020",
+    "moduleResolution": "node",
+    "allowJs": true,
+    "sourceMap": true,
+    "lib": [
+      "dom",
+      "es5",
+      "es2017",
+      "scripthost",
+      "es2015.promise"
+    ]
+  },
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
+}
