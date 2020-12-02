@@ -42,12 +42,12 @@ export class RandomScene {
 		}
 
 		let material1 = new Dielectric(1.5);
-		this.world.add(new Sphere(new Vector(0, 1, 0), randomInRange(.5, 1), material1));
+		this.world.add(new Sphere(new Vector(0, 1, 0), randomInRange(.3, 1.5), material1));
 
 		let material2 = new Lambertian(new Vector(0.4, 0.2, 0.1));
-		this.world.add(new Sphere(new Vector(-4, 1, 0), randomInRange(.5, 1), material2));
+		this.world.add(new Sphere(new Vector(-4, 1, 0), randomInRange(.3, 1.5), material2));
 
 		let material3 = new Metal(new Vector(0.7, 0.6, 0.5), 0.0);
-		this.world.add(new Sphere(new Vector(4, 1, 0), randomInRange(.5, 1), material3));
+		this.world.add(new Sphere(new Vector(4, 1, 0), randomInRange(.3, 1.5), material3));
 	}
 }

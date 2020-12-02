@@ -30,7 +30,7 @@ export class Sphere implements Hittable {
 
 		let outwardNormal = rec.p
 			.subtract(this.center)
-			.divide(this.radius);
+			.divideNum(this.radius);
 
 		rec.setFaceNormal(r, outwardNormal);
 		rec.material = this.material;

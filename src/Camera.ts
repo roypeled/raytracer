@@ -69,26 +69,26 @@ export class Camera {
 		this.lensRadius = this.aperture/2;
 
 		this.origin = this.lookFrom;
-		this.horizontal = this.u.multiply(this.viewportWidth).multiply(this.focusDist);
-		this.vertical = this.v.multiply(this.viewportHeight).multiply(this.focusDist);
+		this.horizontal = this.u.multiplyNum(this.viewportWidth).multiplyNum(this.focusDist);
+		this.vertical = this.v.multiplyNum(this.viewportHeight).multiplyNum(this.focusDist);
 		this.lowerLeftCorner = this.origin
-			.subtract(this.horizontal.divide(2))
-			.subtract(this.vertical.divide(2))
+			.subtract(this.horizontal.divideNum(2))
+			.subtract(this.vertical.divideNum(2))
 			.subtract(
-				w.multiply(this.focusDist)
+				w.multiplyNum(this.focusDist)
 			);
 	}
 
 	getRay(s:number, t:number) {
-		let rd = randomInUnitDisk().multiply(this.lensRadius);
-		let offset = this.u.multiply(rd.x)
-			.add(this.v.multiply(rd.y))
+		let rd = randomInUnitDisk().multiplyNum(this.lensRadius);
+		let offset = this.u.multiplyNum(rd.x)
+			.add(this.v.multiplyNum(rd.y))
 
 		return new Ray(
 			this.origin.add(offset),
 			this.lowerLeftCorner
-				.add(this.horizontal.multiply(s))
-				.add(this.vertical.multiply(t))
+				.add(this.horizontal.multiplyNum(s))
+				.add(this.vertical.multiplyNum(t))
 				.subtract(this.origin)
 				.subtract(offset)
 		);

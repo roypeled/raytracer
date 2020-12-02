@@ -10,7 +10,7 @@ const lookAt = new Vector(0,0,0);
 const vup = new Vector(0,1,0);
 const distToFocus = 10;
 const aperture = .1;
-const imageWidth = 600;
+const imageWidth = 1000;
 
 export class Renderer {
 	protected static canvas:HTMLCanvasElement;
@@ -21,6 +21,7 @@ export class Renderer {
 	protected static firstRun = true;
 	protected static IMAGE_HEIGHT:number;
 	protected static renderPoints:[number, number][] = [];
+	protected static temlatePoints:[number, number][] = [];
 
 	protected static world = new RandomScene().world;
 	// Camera
@@ -35,10 +36,10 @@ export class Renderer {
 		distToFocus,
 	);
 
-	protected static createCanvas() {
+	static createCanvas() {
 		if (this.canvas) return;
 
-		this.IMAGE_HEIGHT = this.IMAGE_WIDTH / ASPECT_RATIO;
+		this.IMAGE_HEIGHT = Math.round(this.IMAGE_WIDTH / ASPECT_RATIO);
 
 		this.canvas = document.createElement('canvas');
 		this.canvas.setAttribute('style', 'transform: rotate(180deg)');
@@ -51,6 +52,14 @@ export class Renderer {
 
 		this.imageData = this.ctx.createImageData(this.IMAGE_WIDTH, this.IMAGE_HEIGHT);
 		this.data = this.imageData.data;
+
+		for (let j = this.IMAGE_HEIGHT-1; j >=0; --j) {
+			for (let i = 0; i < this.IMAGE_WIDTH; ++i) {
+				this.temlatePoints.push([i, j]);
+			}
+		}
+
+		this.temlatePoints = this.temlatePoints.sort(() => Math.random() - .5);
 	}
 
 	protected static async wait(time:number = 0){
@@ -97,20 +106,10 @@ export class Renderer {
 
 
 		const render = async () => {
-			// Image
-			this.createCanvas();
 
-			this.renderPoints = [];
+			this.renderPoints = this.temlatePoints;
 
-			for (let j = this.IMAGE_HEIGHT-1; j >=0; --j) {
-				for (let i = 0; i < this.IMAGE_WIDTH; ++i) {
-					this.renderPoints.push([i, j]);
-				}
-			}
-
-			this.renderPoints = this.renderPoints.sort(() => Math.random() - .5);
-
-			const frameLength = 1000/24 * .8;
+			const frameLength = 1000/24;
 
 			console.log('render frameLength', frameLength);
 
@@ -118,14 +117,9 @@ export class Renderer {
 
 			showStats && stats.set(this.renderPoints.length, 0, 0);
 
-			let count=0;
-			let frameCount = 0;
-
-			for (let [i, j] of this.renderPoints) {
+			for (let count=0; count< this.renderPoints.length; count++) {
+				let [i, j] = this.renderPoints[count];
 				this.renderRay(i, j, samplesPerPixel, maxDepth);
-
-				count++;
-				frameCount++;
 
 				let now = new Date().getTime();
 
@@ -137,14 +131,12 @@ export class Renderer {
 					await this.wait(1000/24 - (now - start));
 
 					if(cancelled) {
-						console.log('before cancel', count);
 						return;
 					}
 
-					showStats && stats.set(this.renderPoints.length, count, frameCount);
+					showStats && stats.set(this.renderPoints.length, count, 0);
 
 					start = now;
-					frameCount = 0;
 				}
 			}
 

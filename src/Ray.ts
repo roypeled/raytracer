@@ -5,7 +5,7 @@ export class Ray {
 	constructor(public origin:Vector, public direction:Vector) {}
 
 	at(t:number) {
-		return this.origin.add(this.direction.multiply(t));
+		return this.origin.add(this.direction.multiplyNum(t));
 	}
 
 	hitSphere(center:Vector, radius:number, r:Ray) {
@@ -42,9 +42,9 @@ export class Ray {
 		const blue = new Vector(.5,.7,1);
 
 		return white
-				.multiply(1-t)
+				.multiplyNum(1-t)
 				.add(
-					blue.multiply(t)
+					blue.multiplyNum(t)
 				);
 	}
 

@@ -16,6 +16,8 @@ function debounce(func:Function, interval:number) {
 
 async function run() {
 
+	Renderer.createCanvas();
+
 	document.body.addEventListener('keydown', debounce(onKeypress, 100));
 
 	let canceller:()=>Promise<any>;

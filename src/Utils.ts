@@ -29,7 +29,7 @@ export function randomUnitVector() {
 export function randomInHemisphere(normal: Vector) {
 	let inUnitSphere = randomInUnitSphere();
 	if (Vector.dot(inUnitSphere, normal) > 0) return inUnitSphere;
-	else return inUnitSphere.multiply(-1);
+	else return inUnitSphere.multiplyNum(-1);
 }
 
 export function randomInUnitDisk() {

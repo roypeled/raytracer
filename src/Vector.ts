@@ -1,39 +1,44 @@
 import { clamp, randomInRange } from './Utils';
 
 export class Vector {
+
 	constructor(public x:number, public y:number, public z:number) {
 	}
 
-	subtract(v:Vector|number) {
-		if(v instanceof Vector)
-			return new Vector(this.x - v.x, this.y - v.y, this.z - v.z);
-		else
-			return new Vector(this.x - v, this.y - v, this.z - v);
+	subtract(v:Vector) {
+		return new Vector(this.x - v.x, this.y - v.y, this.z - v.z);
+	}
+
+	subtractNum(v:number) {
+		return new Vector(this.x - v, this.y - v, this.z - v);
 	}
 
 	subtractFrom(v:Vector) {
 		return new Vector(this.x - v.x, this.y - v.y, this.z - v.z);
 	}
 
-	add(v:Vector|number) {
-		if(v instanceof Vector)
-			return new Vector(this.x + v.x, this.y + v.y, this.z + v.z);
-		else
-			return new Vector(this.x + v, this.y + v, this.z + v);
+	add(v:Vector) {
+		return new Vector(this.x + v.x, this.y + v.y, this.z + v.z);
 	}
 
-	multiply(v:Vector | number) {
-		if(v instanceof Vector)
-			return new Vector(this.x * v.x, this.y * v.y, this.z * v.z);
-		else
-			return new Vector(this.x * v, this.y * v, this.z * v);
+	addNum(v:number) {
+		return new Vector(this.x + v, this.y + v, this.z + v);
 	}
 
-	divide(v:Vector | number) {
-		if(v instanceof Vector)
-			return new Vector(this.x / v.x, this.y / v.y, this.z / v.z);
-		else
-			return new Vector(this.x / v, this.y / v, this.z / v);
+	multiply(v:Vector) {
+		return new Vector(this.x * v.x, this.y * v.y, this.z * v.z);
+	}
+
+	multiplyNum(v:number) {
+		return new Vector(this.x * v, this.y * v, this.z * v);
+	}
+
+	divide(v:Vector) {
+		return new Vector(this.x / v.x, this.y / v.y, this.z / v.z);
+	}
+
+	divideNum(v:number) {
+		return new Vector(this.x / v, this.y / v, this.z / v);
 	}
 
 	length_squared() {
@@ -58,17 +63,17 @@ export class Vector {
 
 	static reflect(v1:Vector, v2:Vector){
 		return v1.subtract(
-			v2.multiply(
+			v2.multiplyNum(
 			2 * Vector.dot(v1, v2)
 			)
 		)
 	}
 
 	static refract(v1:Vector, v2:Vector, etaiOverEtat:number) {
-		let cosTheta = Math.min(Vector.dot(v1.multiply(-1), v2), 1);
-		let rOutPerp = v1.add(v2.multiply(cosTheta))
-			.multiply(etaiOverEtat);
-		let rOutParallel = v2.multiply(
+		let cosTheta = Math.min(Vector.dot(v1.multiplyNum(-1), v2), 1);
+		let rOutPerp = v1.add(v2.multiplyNum(cosTheta))
+			.multiplyNum(etaiOverEtat);
+		let rOutParallel = v2.multiplyNum(
 			-Math.sqrt(
 				Math.abs(1 - rOutPerp.length_squared())
 			)
@@ -84,14 +89,18 @@ export class Vector {
 		return v1.subtract(v2);
 	}
 
-	static multiply(v1:Vector, v2:Vector | number) {
+	static multiply(v1:Vector, v2:Vector) {
 		return v1.multiply(v2);
 	}
 
-	static divide(t:number, v:Vector) {
-		return v.divide(t);
+	static multiplyNum(v1:Vector, v2:number) {
+		return v1.multiplyNum(v2);
 	}
-	
+
+	static divide(t:number, v:Vector) {
+		return v.divideNum(t);
+	}
+
 	static dot(v1:Vector, v2:Vector) {
 		return v1.x*v2.x
 			+ v1.y*v2.y
@@ -105,7 +114,7 @@ export class Vector {
 	}
 
 	static unitVector(v:Vector) {
-		return v.divide(v.length());
+		return v.divideNum(v.length());
 	}
 
 	static writeColor(v:Vector, samplesPerPixel:number) {

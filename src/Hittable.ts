@@ -13,7 +13,7 @@ export class HitRecord {
 
 	setFaceNormal(r: Ray, outwardNormal: Vector) {
 		this.frontFace = Vector.dot(r.direction, outwardNormal) < 0;
-		this.normal = this.frontFace ? outwardNormal : outwardNormal.multiply(-1);
+		this.normal = this.frontFace ? outwardNormal : outwardNormal.multiplyNum(-1);
 	}
 }
 

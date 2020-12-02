@@ -22,7 +22,7 @@ class Stats {
 		let elapsedMinutes = Math.floor(duration / (1000*60));
 		let elapsedSeconds = Math.floor((duration - (elapsedMinutes*1000*60)) / 1000);
 
-		this.el.innerText = `${this.message} || ${percentage}% || ${elapsedMinutes}:${elapsedSeconds} elapsed || rendered ${pointsPerFrame} points per frame`;
+		this.el.innerText = `${this.message} || ${percentage}% || ${elapsedMinutes}:${elapsedSeconds} elapsed`;
 	}
 }
 

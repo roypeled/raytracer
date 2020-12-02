@@ -34,7 +34,7 @@ export class Metal implements Material {
 			rec.normal
 		);
 
-		Object.assign(scattered, new Ray(rec.p, reflect.add(randomInUnitSphere().multiply(this.fuzz))));
+		Object.assign(scattered, new Ray(rec.p, reflect.add(randomInUnitSphere().multiplyNum(this.fuzz))));
 		Object.assign(attenuation, this.color);
 
 		return Vector.dot(scattered.direction, rec.normal) > 0;
@@ -49,7 +49,7 @@ export class Dielectric implements Material {
 		let refractionRatio = rec.frontFace ? 1/this.indexOfRefraction : this.indexOfRefraction;
 
 		let unitDirection = Vector.unitVector(rIn.direction);
-		let cosTheta = Math.min(Vector.dot(unitDirection.multiply(-1), rec.normal), 1);
+		let cosTheta = Math.min(Vector.dot(unitDirection.multiplyNum(-1), rec.normal), 1);
 		let sinTheta = Math.sqrt(1 - cosTheta*cosTheta);
 
 		let cannotRefract = refractionRatio * sinTheta > 1;
