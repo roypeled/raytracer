@@ -2,27 +2,27 @@ class Stats {
 
 	start = new Date().getTime();
 	el:HTMLElement;
+	message = `Use arrow keys to move camera, 'o' - zoom out, 'i' - zoom in`;
 
 	constructor() {
 		this.el = document.createElement("pre");
+		this.el.innerText = this.message;
 		document.body.appendChild(this.el);
 	}
 
 	set(
 		totalPixels:number,
-		renderedPixels:number
+		renderedPixels:number,
+		pointsPerFrame:number,
 	    ) {
 		let percentage = Math.round(renderedPixels/totalPixels * 100);
 		let now = new Date().getTime();
 		let duration = now - this.start;
-		let remaining = (duration / (renderedPixels/totalPixels)) - duration;
-		let durationMinutes = Math.floor(remaining / (1000*60));
-		let durationSeconds = Math.floor((remaining - (durationMinutes*1000*60)) / 1000);
 
 		let elapsedMinutes = Math.floor(duration / (1000*60));
 		let elapsedSeconds = Math.floor((duration - (elapsedMinutes*1000*60)) / 1000);
 
-		this.el.innerText = `${percentage}% || ${durationMinutes}:${durationSeconds} remaining || ${elapsedMinutes}:${elapsedSeconds} elapsed`;
+		this.el.innerText = `${this.message} || ${percentage}% || ${elapsedMinutes}:${elapsedSeconds} elapsed || rendered ${pointsPerFrame} points per frame`;
 	}
 }
 

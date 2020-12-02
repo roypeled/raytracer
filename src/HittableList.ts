@@ -22,10 +22,18 @@ export class HittableList implements Hittable{
 			if(object.hit(r, tMin, closestSoFar, tempRec)) {
 				hitAnything = true;
 				closestSoFar = tempRec.t;
-				Object.assign(record, tempRec)
+				this.merge(record, tempRec);
 			}
 		}
 
 		return hitAnything;
+	}
+
+	private merge(target: HitRecord, object: HitRecord) {
+		target.normal = object.normal;
+		target.frontFace = object.frontFace;
+		target.material = object.material;
+		target.p = object.p;
+		target.t = object.t;
 	}
 }

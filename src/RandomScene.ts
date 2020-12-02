@@ -12,8 +12,9 @@ export class RandomScene {
 	constructor() {
 		this.world.add(new Sphere(new Vector(0, -1000,0), 1000, this.groundMat));
 
-		for (let a = -11; a < 11; a++) {
-			for (let b = -11; b < 11; b++) {
+		const balls = 5;
+		for (let a = -balls; a < balls; a++) {
+			for (let b = -balls; b < balls; b++) {
 				let autoChooseMat = Math.random();
 				let center = new Vector(a + 0.9*Math.random(), 0.2, b + 0.9*Math.random());
 
