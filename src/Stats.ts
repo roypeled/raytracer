@@ -10,6 +10,10 @@ class Stats {
 		document.body.appendChild(this.el);
 	}
 
+	reset() {
+		this.start = new Date().getTime();
+	}
+
 	set(
 		totalPixels:number,
 		renderedPixels:number,

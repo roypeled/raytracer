@@ -1,13 +1,37 @@
 import { Ray } from './Ray';
-import { HitRecord } from './Hittable';
+import { HitRecord, Serializeable, SerializedHittable } from './Hittable';
 import { Vector } from './Vector';
 import { randomInUnitSphere, randomUnitVector } from './Utils';
+import { deserialize, SerializeOf } from './deserialize';
 
-export interface Material {
-	scatter(rIn:Ray, rec:HitRecord, attenuation:Vector, scattered:Ray):boolean;
+export interface SerializedMaterial extends SerializedHittable {
+
 }
 
+export interface Material extends Serializeable {
+	scatter(rIn:Ray, rec:HitRecord, attenuation:Vector, scattered:Ray):boolean;
+	lightSource(attenuation:Vector):boolean;
+}
+
+
 export class Lambertian implements Material {
+	static deserialize(object: SerializeOf<Lambertian>): Lambertian {
+		return new Lambertian(
+			deserialize(object.color)
+		);
+	}
+
+	serialize() {
+		return {
+			type: 'Lambertian',
+			color: this.color.serialize(),
+		};
+	}
+
+	lightSource(attenuation: Vector): boolean {
+		return false;
+	}
+
 	constructor(private color:Vector) {
 	}
 
@@ -24,8 +48,58 @@ export class Lambertian implements Material {
 
 }
 
+export class Light implements Material {
+	static deserialize(object: SerializeOf<Light>): Light {
+		return new Light();
+	}
+
+	serialize() {
+		return {
+			type: 'Light',
+		};
+	}
+
+	constructor() {
+	}
+
+	lightSource(attenuation: Vector): boolean {
+		Object.assign(attenuation, new Vector(1.9, 1.9, 1.9));
+		return true;
+	}
+
+	scatter(rIn: Ray, rec: HitRecord, attenuation: Vector, scattered: Ray): boolean {
+		let scatterDirection = rec.normal.add(randomUnitVector());
+
+		if(scatterDirection.nearZero())
+			scatterDirection = rec.normal;
+
+		Object.assign(scattered, new Ray(rec.p, scatterDirection));
+		Object.assign(attenuation, new Vector(1.9, 1.9, 1.9));
+		return false;
+	}
+}
+
 export class Metal implements Material {
+	static deserialize(object: SerializeOf<Metal>): Metal {
+		return new Metal(
+			deserialize(object.color),
+			object.fuzz
+		);
+	}
+
+	serialize() {
+		return {
+			type: 'Metal',
+			color: this.color.serialize(),
+			fuzz: this.fuzz,
+		};
+	}
+
 	constructor(private color:Vector, private fuzz:number) {
+	}
+
+	lightSource(attenuation: Vector): boolean {
+		return false;
 	}
 
 	scatter(rIn: Ray, rec: HitRecord, attenuation: Vector, scattered: Ray): boolean {
@@ -42,7 +116,22 @@ export class Metal implements Material {
 }
 
 export class Dielectric implements Material {
+	static deserialize(object: SerializeOf<Dielectric>) {
+		return new Dielectric(object.indexOfRefraction);
+	}
+
+	serialize() {
+		return {
+			type: 'Dielectric',
+			indexOfRefraction: this.indexOfRefraction
+		};
+	}
+
 	constructor(private indexOfRefraction:number) {
+	}
+
+	lightSource(attenuation: Vector): boolean {
+		return false;
 	}
 
 	scatter(rIn: Ray, rec: HitRecord, attenuation: Vector, scattered: Ray): boolean {

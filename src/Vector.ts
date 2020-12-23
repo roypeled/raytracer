@@ -1,6 +1,21 @@
 import { clamp, randomInRange } from './Utils';
+import { Serializeable } from './Hittable';
+import { SerializeOf } from './deserialize';
 
-export class Vector {
+export class Vector implements Serializeable{
+	serialize() {
+		return {
+			x: this.x,
+			y: this.y,
+			z: this.z,
+			type: 'Vector',
+		};
+	}
+
+	static deserialize(o: SerializeOf<Vector>): Vector {
+		return new Vector(o.x, o.y, o.z);
+	}
+
 
 	constructor(public x:number, public y:number, public z:number) {
 	}

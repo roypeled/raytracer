@@ -1,8 +1,14 @@
 import { Vector } from './Vector';
 import { Ray } from './Ray';
 import { degreesToRadians, randomInUnitDisk } from './Utils';
+import { Hittable, Serializeable } from './Hittable';
+import { deserialize, SerializeOf } from './deserialize';
+import { HittableList } from './HittableList';
 
-export class Camera {
+export class Camera implements Serializeable {
+
+	sortedHittables: Hittable[];
+
 	viewportHeight:number;
 	viewportWidth:number;
 	lensRadius:number;
@@ -14,8 +20,33 @@ export class Camera {
 	u:Vector;
 	v:Vector;
 
+	static deserialize(o:SerializeOf<Camera>) {
+		return new Camera(
+			deserialize(o.lookFrom),
+			deserialize(o.lookAt),
+			deserialize(o.vUp),
+			o.vFov,
+			o.aspectRatio,
+			o.aperture,
+			o.focusDist,
+		)
+	}
+
+	serialize() {
+		return {
+			type: 'Camera',
+			lookFrom: this.lookFrom.serialize(),
+			lookAt: this.lookAt.serialize(),
+			vUp: this.vUp.serialize(),
+			vFov: this.vFov,
+			aspectRatio: this.aspectRatio,
+			aperture: this.aperture,
+			focusDist: this.focusDist,
+		};
+	}
+
 	constructor(
-		private lookFrom:Vector,
+		public lookFrom:Vector,
 		private lookAt:Vector,
 		private vUp:Vector,
 		private vFov:number,

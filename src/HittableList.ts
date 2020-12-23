@@ -1,9 +1,30 @@
 import { HitRecord, Hittable } from './Hittable';
 import { Ray } from './Ray';
+import { deserialize, SerializeOf } from './deserialize';
+import { Vector } from './Vector';
 
-export class HittableList implements Hittable{
-
+export class HittableList implements Hittable {
+    sortedHittables: Hittable[];
 	list:Hittable[] = [];
+	center: Vector;
+
+    distanceFrom(center: Vector): number {
+        throw new Error('Method not implemented.');
+    }
+
+	static deserialize(object: SerializeOf<HittableList>): HittableList {
+		let hittableList = new HittableList();
+		hittableList.list = object.list.map(deserialize)
+		return hittableList;
+	}
+
+	serialize() {
+		return {
+			list: this.list.map(o => o.serialize()),
+			type: 'HittableList',
+		};
+	}
+
 
 	add(object:Hittable) {
 		this.list.push(object);

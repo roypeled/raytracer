@@ -12,7 +12,8 @@
       "es5",
       "es2017",
       "scripthost",
-      "es2015.promise"
+      "es2015.promise",
+      "webworker"
     ]
   },
   "exclude": [

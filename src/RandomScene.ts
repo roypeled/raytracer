@@ -1,5 +1,5 @@
 import { HittableList } from './HittableList';
-import { Dielectric, Lambertian, Metal } from './Material';
+import { Dielectric, Lambertian, Light, Material, Metal } from './Material';
 import { Vector } from './Vector';
 import { Sphere } from './Sphere';
 import { randomInRange } from './Utils';
@@ -26,11 +26,15 @@ export class RandomScene {
 						let albedo = Vector.random().multiply(Vector.random());
 						let sphereMaterial = new Lambertian(albedo);
 						this.world.add(new Sphere(center, r, sphereMaterial));
-					} else if (autoChooseMat < 0.95) {
+					} else if (autoChooseMat < 0.9) {
 						// metal
 						let albedo = Vector.randomInRange(0.5, 1);
 						let fuzz = randomInRange(0, 0.5);
 						let sphereMaterial = new Metal(albedo, fuzz);
+						this.world.add(new Sphere(center, r, sphereMaterial));
+					} else if (autoChooseMat < 0.95) {
+						// light
+						let sphereMaterial = new Light();
 						this.world.add(new Sphere(center, r, sphereMaterial));
 					} else {
 						// glass

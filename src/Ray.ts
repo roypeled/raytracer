@@ -8,20 +8,6 @@ export class Ray {
 		return this.origin.add(this.direction.multiplyNum(t));
 	}
 
-	hitSphere(center:Vector, radius:number, r:Ray) {
-		let oc = r.origin.subtract(center);
-		let a = r.direction.length_squared();
-		let halfB = Vector.dot(oc, r.direction);
-		let c = oc.length_squared() - radius*radius;
-		const discriminant = halfB*halfB - a*c;
-
-		if(discriminant < 0) {
-			return -1;
-		}
-
-		return (-halfB-Math.sqrt(discriminant)) / a
-	}
-
 	color(world:Hittable, depth:number):Vector {
 		if(depth <= 0) return new Vector(0,0,0);
 
@@ -31,7 +17,9 @@ export class Ray {
 			let attenuation:Vector = new Vector(0,0,0);
 
 			if(rec.material.scatter(this, rec, attenuation, scattered))
-				return attenuation.multiply(scattered.color(world, depth-1))
+				return attenuation.multiply(scattered.color(world, depth-1));
+			else if(rec.material.lightSource(attenuation))
+				return attenuation;
 
 			return new Vector(0,0,0);
 		}

@@ -2,9 +2,33 @@ import { HitRecord, Hittable } from './Hittable';
 import { Ray } from './Ray';
 import { Vector } from './Vector';
 import { Material } from './Material';
+import { deserialize, SerializeOf } from './deserialize';
 
 export class Sphere implements Hittable {
-	constructor(private center:Vector, private radius:number, public material:Material) {
+	sortedHittables: Hittable[];
+
+	static deserialize(object: SerializeOf<Sphere>): Sphere {
+		return new Sphere(
+			deserialize(object.center),
+			object.radius,
+			deserialize(object.material),
+		);
+	}
+
+	serialize() {
+		return {
+			center: this.center.serialize(),
+			radius: this.radius,
+			material: this.material.serialize(),
+			type: 'Sphere',
+		};
+	}
+
+	constructor(public center:Vector, private radius:number, public material:Material) {
+	}
+
+	distanceFrom(center: Vector): number {
+        return Math.sqrt(Math.pow(this.center.x - center.x, 2) + Math.pow(this.center.y - center.y, 2) + Math.pow(this.center.z - center.z, 2));
 	}
 
 	hit(r: Ray, tMin: number, tMax: number, rec: HitRecord): boolean {
